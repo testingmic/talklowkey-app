@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "TalkLowKey",
-    "slug": "talklowkey",
+    "slug": "talk-low-key",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,6 +24,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4953e007-e385-4aba-9223-89da3ff0389f"
+      }
+    },
+    "owner": "emmallob14"
   }
 }
