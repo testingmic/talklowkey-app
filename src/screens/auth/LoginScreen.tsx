@@ -10,8 +10,10 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTheme } from "../../contexts/ThemeContext";
 
@@ -121,22 +123,43 @@ const LoginScreen = ({ navigation }: any) => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.content}
       >
-        {/* Logo and App Name */}
-        <View style={[styles.logoContainer, { backgroundColor: '#e6e3fe', padding: 16, borderRadius: 16 }]}>
-          <View style={[styles.logoIcon, { backgroundColor: theme.primary }]}>
-            <Ionicons name="chatbubble-outline" size={40} color="#fff" />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* Welcome Section */}
+          <View style={styles.welcomeSection}>
+            <View style={[styles.logoIcon, { backgroundColor: theme.primary }]}>
+              <Ionicons name="chatbubble-outline" size={40} color="#fff" />
+            </View>
+            <Text style={[styles.appName, { color: theme.text }]}>
+              Welcome to TalkLowKey
+            </Text>
+            <Text style={[styles.appTagline, { color: theme.textSecondary }]}>
+              Share thoughts, ideas, and experiences in a safe environment where your privacy is our priority. Connect with your community through secure, private messaging.
+            </Text>
+            
+            {/* Feature Cards */}
+            <View style={styles.featureCardsContainer}>
+              <View style={[styles.featureCard, { backgroundColor: theme.card, borderColor: theme.border, marginRight: 6 }]}>
+                <View style={[styles.featureIcon, { backgroundColor: '#E8F5E9' }]}>
+                  <Ionicons name="people-outline" size={24} color="#90BE6D" />
+                </View>
+                <Text style={[styles.featureDescription, { color: theme.textSecondary }]}>
+                  Chat one-on-one or create group conversations.
+                </Text>
+              </View>
+              
+              <View style={[styles.featureCard, { backgroundColor: theme.card, borderColor: theme.border, marginLeft: 6 }]}>
+                <View style={[styles.featureIcon, { backgroundColor: '#F3E5F5' }]}>
+                  <Ionicons name="images-outline" size={24} color="#9C27B0" />
+                </View>
+                <Text style={[styles.featureDescription, { color: theme.textSecondary }]}>
+                  Share images and media with your conversations.
+                </Text>
+              </View>
+            </View>
           </View>
-          <Text style={[styles.appName, { color: theme.text }]}>
-            TalkLowKey
-          </Text>
-          <Text style={[styles.appTagline, { color: '#000000' }]}>
-          Share thoughts, ideas, and experiences in a safe environment where your privacy is our priority. 
-          Connect with your community through secure, private messaging.
-          </Text>
-        </View>
 
-        {/* Login Form */}
-        <View style={styles.form}>
+          {/* Login Form */}
+          <View style={styles.form}>
           {errorMessage ? (
             <View
               style={[
@@ -165,33 +188,43 @@ const LoginScreen = ({ navigation }: any) => {
           ) : null}
 
           <View style={styles.inputGroup}>
-            <Text style={[styles.inputLabel, { color: theme.text }]}>
-              Email
-            </Text>
-            <TextInput
-              value={email}
-              onChangeText={setEmail}
-              placeholder="Enter your email"
-              placeholderTextColor={theme.textMuted}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              style={[
-                styles.input,
-                { backgroundColor: theme.card, color: theme.text },
-              ]}
-            />
+            <View style={styles.labelContainer}>
+              <View style={[styles.labelDot, { backgroundColor: '#4361EE' }]} />
+              <Text style={[styles.inputLabel, { color: theme.text }]}>
+                Username or Email
+              </Text>
+            </View>
+            <View style={[styles.inputContainer, { backgroundColor: theme.card }]}>
+              <Ionicons name="person-outline" size={20} color={theme.textMuted} style={styles.inputIcon} />
+              <TextInput
+                value={email}
+                onChangeText={setEmail}
+                placeholder="abenajaunty20@gmail.com"
+                placeholderTextColor={theme.textMuted}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                style={[
+                  styles.input,
+                  { color: theme.text },
+                ]}
+              />
+            </View>
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={[styles.inputLabel, { color: theme.text }]}>
-              Password
-            </Text>
+            <View style={styles.labelContainer}>
+              <View style={[styles.labelDot, { backgroundColor: '#9C27B0' }]} />
+              <Text style={[styles.inputLabel, { color: theme.text }]}>
+                Password
+              </Text>
+            </View>
             <View
               style={[
                 styles.passwordContainer,
                 { backgroundColor: theme.card },
               ]}
             >
+              <Ionicons name="lock-closed-outline" size={20} color={theme.textMuted} style={styles.inputIcon} />
               <TextInput
                 value={password}
                 onChangeText={setPassword}
@@ -229,44 +262,54 @@ const LoginScreen = ({ navigation }: any) => {
             disabled={isButtonLoading}
             style={[
               styles.loginButton,
-              { backgroundColor: theme.primary },
               isButtonLoading && styles.disabledButton,
             ]}
           >
-            {isButtonLoading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.loginButtonText}>Sign In</Text>
-            )}
+            <LinearGradient
+              colors={['#4361EE', '#9C27B0']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.loginButtonGradient}
+            >
+              {isButtonLoading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <>
+                  <Ionicons name="log-in-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
+                  <Text style={styles.loginButtonText}>Sign In to Your Account</Text>
+                </>
+              )}
+            </LinearGradient>
           </TouchableOpacity>
         </View>
 
-        {/* Sign Up Link */}
-        <View style={styles.signupContainer}>
-          <Text style={[styles.noAccountText, { color: theme.textSecondary }]}>
-            Don't have an account?{" "}
-          </Text>
-          <TouchableOpacity onPress={handleSignUp}>
-            <Text style={[styles.signupText, { color: theme.primary }]}>
-              Sign Up
+          {/* Sign Up Link */}
+          <View style={styles.signupContainer}>
+            <Text style={[styles.noAccountText, { color: theme.textSecondary }]}>
+              New to TalkLowKey?{" "}
             </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={[{ 
-            backgroundColor: '#fff', padding: 16, 
-            borderRadius: 16, alignItems: 'center', 
-            justifyContent: 'center',
-            borderWidth: 1,
-            borderColor: '#cccccc',
-          }]}>
-          <Text style={[{ color: '#000000', fontSize: 16, fontWeight: 'bold', textAlign: 'center' }]}>
-            Group & Individual
-          </Text>
-          <Text style={[{ color: '#000000', alignSelf: 'center', alignItems: 'center', textAlign: 'center' }]}>
-            Chat one-on-one or create group conversations with your friends, family, and community.
-          </Text>
-        </View>
+            <View style={styles.signupButtonsContainer}>
+              <TouchableOpacity 
+                onPress={handleSignUp}
+                style={[styles.signupButton, { borderColor: theme.border }]}
+              >
+                <Ionicons name="person-add-outline" size={18} color={theme.text} style={{ marginRight: 8 }} />
+                <Text style={[styles.signupText, { color: theme.text }]}>
+                  Create Your Account
+                </Text>
+              </TouchableOpacity>
+              
+              {/* <TouchableOpacity 
+                style={[styles.installButton, { borderColor: theme.border }]}
+              >
+                <Ionicons name="download-outline" size={18} color="#90BE6D" style={{ marginRight: 8 }} />
+                <Text style={[styles.installText, { color: theme.text }]}>
+                  Install App
+                </Text>
+              </TouchableOpacity> */}
+            </View>
+          </View>
+        </ScrollView>
 
         {/* Skip Button */}
         {/* <TouchableOpacity
@@ -289,16 +332,18 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 24,
-    justifyContent: "center",
   },
-  logoContainer: {
+  welcomeSection: {
     alignItems: "center",
-    marginBottom: 40,
+    marginBottom: 32,
+    padding: 20,
+    borderRadius: 16,
+    backgroundColor: '#F3F4F6',
   },
   logoIcon: {
     width: 80,
     height: 80,
-    borderRadius: 50,
+    borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 16,
@@ -306,11 +351,41 @@ const styles = StyleSheet.create({
   appName: {
     fontSize: 28,
     fontWeight: "bold",
-    marginBottom: 8,
+    marginBottom: 12,
+    textAlign: "center",
   },
   appTagline: {
     fontSize: 16,
     textAlign: "center",
+    lineHeight: 24,
+    marginBottom: 24,
+  },
+  featureCardsContainer: {
+    flexDirection: "row",
+    width: "100%",
+  },
+  featureCard: {
+    flex: 1,
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+  featureIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  featureTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 4,
+  },
+  featureDescription: {
+    fontSize: 14,
+    lineHeight: 20,
   },
   form: {
     marginBottom: 24,
@@ -328,21 +403,42 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   inputGroup: {
-    marginBottom: 16,
+    marginBottom: 20,
+  },
+  labelContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  labelDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginRight: 8,
   },
   inputLabel: {
     fontSize: 14,
-    marginBottom: 4,
+    fontWeight: "500",
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+  },
+  inputIcon: {
+    marginRight: 8,
   },
   input: {
+    flex: 1,
     padding: 12,
-    borderRadius: 8,
     fontSize: 16,
   },
   passwordContainer: {
     flexDirection: "row",
     alignItems: "center",
     borderRadius: 8,
+    paddingHorizontal: 12,
   },
   passwordInput: {
     flex: 1,
@@ -360,9 +456,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   loginButton: {
-    paddingVertical: 12,
     borderRadius: 8,
+    overflow: "hidden",
+  },
+  loginButtonGradient: {
+    paddingVertical: 14,
+    flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
   },
   loginButtonText: {
     color: "white",
@@ -373,13 +474,44 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   signupContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 24,
   },
-  noAccountText: {},
+  noAccountText: {
+    marginBottom: 12,
+    fontSize: 14,
+  },
+  signupButtonsContainer: {
+    width: "100%",
+  },
+  signupButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    borderWidth: 1,
+    backgroundColor: "#fff",
+    marginBottom: 8,
+  },
   signupText: {
-    fontWeight: "bold",
+    fontWeight: "500",
+    fontSize: 14,
+  },
+  installButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    borderWidth: 1,
+    backgroundColor: "#fff",
+  },
+  installText: {
+    fontWeight: "500",
+    fontSize: 14,
   },
   skipButton: {
     paddingVertical: 12,

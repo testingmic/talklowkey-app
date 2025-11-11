@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTheme } from "../../contexts/ThemeContext";
 
@@ -146,17 +147,60 @@ const SignUpScreen = ({ navigation }: any) => {
             <Ionicons name="arrow-back" size={24} color={theme.text} />
           </TouchableOpacity>
 
+          {/* Promotional Section */}
+          <View style={styles.promotionalSection}>
+            <View style={[styles.promoIconContainer, { backgroundColor: theme.primary }]}>
+              <Ionicons name="person-add-outline" size={32} color="#fff" />
+            </View>
+            <Text style={[styles.promoTitle, { color: theme.text }]}>
+              Join <Text style={{ color: '#90BE6D' }}>TalkLowKey</Text>
+            </Text>
+            <Text style={[styles.promoDescription, { color: theme.textSecondary }]}>
+              Connect with your community, share your thoughts, and build meaningful conversations in a safe environment. Start your journey with secure, private messaging.
+            </Text>
+            
+            {/* Feature Cards */}
+            {/* <View style={styles.featureCardsContainer}>
+              <View style={[styles.featureCard, { backgroundColor: theme.card, marginRight: 6 }]}>
+                <View style={[styles.featureIcon, { backgroundColor: '#E3F2FD' }]}>
+                  <Ionicons name="lock-closed-outline" size={20} color="#4361EE" />
+                </View>
+                <Text style={[styles.featureTitle, { color: theme.text }]}>
+                  Tags
+                </Text>
+                <Text style={[styles.featureDescription, { color: theme.textSecondary }]}>
+                  Add tags to your posts to make them more discoverable.
+                </Text>
+              </View>
+              
+              <View style={[styles.featureCard, { backgroundColor: theme.card, marginLeft: 6 }]}>
+                <View style={[styles.featureIcon, { backgroundColor: '#F3E5F5' }]}>
+                  <Ionicons name="flash-outline" size={20} color="#9C27B0" />
+                </View>
+                <Text style={[styles.featureTitle, { color: theme.text }]}>
+                  Instant Setup
+                </Text>
+                <Text style={[styles.featureDescription, { color: theme.textSecondary }]}>
+                  No need to wait for approval, your account is ready to use immediately.
+                </Text>
+              </View>
+            </View> */}
+          </View>
+
           {/* Header */}
-          <View style={styles.header}>
+          {/* <View style={styles.header}>
+            <View style={[styles.headerIconContainer, { backgroundColor: theme.primary }]}>
+              <Ionicons name="person-add-outline" size={24} color="#fff" />
+            </View>
             <Text style={[styles.headerTitle, { color: theme.text }]}>
               Create Account
             </Text>
             <Text
               style={[styles.headerSubtitle, { color: theme.textSecondary }]}
             >
-              Join the community anonymously
+              Join our community today
             </Text>
-          </View>
+          </View> */}
 
           {/* Form */}
           <View style={styles.form}>
@@ -203,53 +247,69 @@ const SignUpScreen = ({ navigation }: any) => {
             ) : null}
 
             <View style={styles.inputGroup}>
-              <Text style={[styles.inputLabel, { color: theme.text }]}>
-                Full Name
-              </Text>
-              <TextInput
-                value={fullName}
-                onChangeText={setFullName}
-                placeholder="Enter your full name"
-                placeholderTextColor={theme.textMuted}
-                style={[
-                  styles.input,
-                  { backgroundColor: theme.card, color: theme.text },
-                ]}
-              />
+              <View style={styles.labelContainer}>
+                <View style={[styles.labelDot, { backgroundColor: '#90BE6D' }]} />
+                <Text style={[styles.inputLabel, { color: theme.text }]}>
+                  Name
+                </Text>
+              </View>
+              <View style={[styles.inputContainer, { backgroundColor: theme.card }]}>
+                <Ionicons name="person-outline" size={20} color={theme.textMuted} style={styles.inputIcon} />
+                <TextInput
+                  value={fullName}
+                  onChangeText={setFullName}
+                  placeholder="Enter your name"
+                  placeholderTextColor={theme.textMuted}
+                  style={[
+                    styles.input,
+                    { color: theme.text },
+                  ]}
+                />
+              </View>
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={[styles.inputLabel, { color: theme.text }]}>
-                Email
-              </Text>
-              <TextInput
-                value={email}
-                onChangeText={setEmail}
-                placeholder="Enter your email"
-                placeholderTextColor={theme.textMuted}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                style={[
-                  styles.input,
-                  { backgroundColor: theme.card, color: theme.text },
-                ]}
-              />
+              <View style={styles.labelContainer}>
+                <View style={[styles.labelDot, { backgroundColor: '#4361EE' }]} />
+                <Text style={[styles.inputLabel, { color: theme.text }]}>
+                  Email Address
+                </Text>
+              </View>
+              <View style={[styles.inputContainer, { backgroundColor: theme.card }]}>
+                <Ionicons name="mail-outline" size={20} color={theme.textMuted} style={styles.inputIcon} />
+                <TextInput
+                  value={email}
+                  onChangeText={setEmail}
+                  placeholder="Enter your email address"
+                  placeholderTextColor={theme.textMuted}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  style={[
+                    styles.input,
+                    { color: theme.text },
+                  ]}
+                />
+              </View>
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={[styles.inputLabel, { color: theme.text }]}>
-                Password
-              </Text>
+              <View style={styles.labelContainer}>
+                <View style={[styles.labelDot, { backgroundColor: '#9C27B0' }]} />
+                <Text style={[styles.inputLabel, { color: theme.text }]}>
+                  Password
+                </Text>
+              </View>
               <View
                 style={[
                   styles.passwordContainer,
                   { backgroundColor: theme.card },
                 ]}
               >
+                <Ionicons name="lock-closed-outline" size={20} color={theme.textMuted} style={styles.inputIcon} />
                 <TextInput
                   value={password}
                   onChangeText={setPassword}
-                  placeholder="Create a password"
+                  placeholder="Create a strong password"
                   placeholderTextColor={theme.textMuted}
                   secureTextEntry={!showPassword}
                   style={[styles.passwordInput, { color: theme.text }]}
@@ -268,15 +328,19 @@ const SignUpScreen = ({ navigation }: any) => {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={[styles.inputLabel, { color: theme.text }]}>
-                Confirm Password
-              </Text>
+              <View style={styles.labelContainer}>
+                <View style={[styles.labelDot, { backgroundColor: '#FF6B35' }]} />
+                <Text style={[styles.inputLabel, { color: theme.text }]}>
+                  Confirm Password
+                </Text>
+              </View>
               <View
                 style={[
                   styles.passwordContainer,
                   { backgroundColor: theme.card },
                 ]}
               >
+                <Ionicons name="checkmark-circle-outline" size={20} color={theme.textMuted} style={styles.inputIcon} />
                 <TextInput
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
@@ -303,20 +367,29 @@ const SignUpScreen = ({ navigation }: any) => {
               disabled={isLoading}
               style={[
                 styles.signupButton,
-                { backgroundColor: theme.primary },
                 isLoading && styles.disabledButton,
               ]}
             >
-              {isLoading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.signupButtonText}>Create Account</Text>
-              )}
+              <LinearGradient
+                colors={['#90BE6D', '#4361EE']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.signupButtonGradient}
+              >
+                {isLoading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <>
+                    <Ionicons name="person-add-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
+                    <Text style={styles.signupButtonText}>Create Your Account</Text>
+                  </>
+                )}
+              </LinearGradient>
             </TouchableOpacity>
           </View>
 
           {/* Terms and Conditions */}
-          <Text style={[styles.termsText, { color: theme.textSecondary }]}>
+          {/* <Text style={[styles.termsText, { color: theme.textSecondary }]}>
             By signing up, you agree to our{" "}
             <Text style={[styles.linkText, { color: theme.primary }]}>
               Terms of Service
@@ -325,7 +398,7 @@ const SignUpScreen = ({ navigation }: any) => {
             <Text style={[styles.linkText, { color: theme.primary }]}>
               Privacy Policy
             </Text>
-          </Text>
+          </Text> */}
 
           {/* Login Link */}
           <View style={styles.loginContainer}>
@@ -334,9 +407,13 @@ const SignUpScreen = ({ navigation }: any) => {
             >
               Already have an account?{" "}
             </Text>
-            <TouchableOpacity onPress={handleLogin}>
-              <Text style={[styles.loginText, { color: theme.primary }]}>
-                Log In
+            <TouchableOpacity 
+              onPress={handleLogin}
+              style={[styles.loginButton, { borderColor: theme.border }]}
+            >
+              <Ionicons name="key-outline" size={18} color={theme.text} style={{ marginRight: 8 }} />
+              <Text style={[styles.loginText, { color: theme.text }]}>
+                Sign In to Your Account
               </Text>
             </TouchableOpacity>
           </View>
@@ -375,17 +452,79 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-start",
   },
-  header: {
+  promotionalSection: {
     marginTop: 16,
     marginBottom: 32,
+    padding: 20,
+    borderRadius: 16,
+    backgroundColor: '#F3F4F6',
+  },
+  promoIconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 16,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  promoTitle: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 12,
+  },
+  promoDescription: {
+    fontSize: 16,
+    lineHeight: 24,
+    marginBottom: 2,
+  },
+  featureCardsContainer: {
+    flexDirection: "row",
+  },
+  featureCard: {
+    flex: 1,
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 8,
+  },
+  featureIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  featureTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 4,
+  },
+  featureDescription: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  header: {
+    marginTop: 8,
+    marginBottom: 32,
+    alignItems: "center",
+  },
+  headerIconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 14,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 16,
   },
   headerTitle: {
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 8,
+    textAlign: "center",
   },
   headerSubtitle: {
     fontSize: 16,
+    textAlign: "center",
   },
   form: {
     marginBottom: 24,
@@ -404,21 +543,42 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   inputGroup: {
-    marginBottom: 16,
+    marginBottom: 20,
+  },
+  labelContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  labelDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginRight: 8,
   },
   inputLabel: {
     fontSize: 14,
-    marginBottom: 4,
+    fontWeight: "500",
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+  },
+  inputIcon: {
+    marginRight: 8,
   },
   input: {
+    flex: 1,
     padding: 12,
-    borderRadius: 8,
     fontSize: 16,
   },
   passwordContainer: {
     flexDirection: "row",
     alignItems: "center",
     borderRadius: 8,
+    paddingHorizontal: 12,
   },
   passwordInput: {
     flex: 1,
@@ -429,10 +589,15 @@ const styles = StyleSheet.create({
     paddingRight: 12,
   },
   signupButton: {
-    paddingVertical: 12,
     borderRadius: 8,
-    alignItems: "center",
     marginTop: 8,
+    overflow: "hidden",
+  },
+  signupButtonGradient: {
+    paddingVertical: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   signupButtonText: {
     color: "white",
@@ -451,13 +616,25 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   loginContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 24,
   },
-  haveAccountText: {},
+  haveAccountText: {
+    marginBottom: 12,
+    fontSize: 14,
+  },
+  loginButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    borderWidth: 1,
+    backgroundColor: "#fff",
+  },
   loginText: {
-    fontWeight: "bold",
+    fontWeight: "500",
+    fontSize: 14,
   },
   skipButton: {
     paddingVertical: 12,

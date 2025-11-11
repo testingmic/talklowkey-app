@@ -8,9 +8,11 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTheme } from "../../contexts/ThemeContext";
 
@@ -90,28 +92,58 @@ const ForgotPasswordScreen = ({ navigation }: any) => {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         style={styles.content}
       >
-        {/* Back Button */}
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-        >
-          <Ionicons name="arrow-back" size={24} color={theme.text} />
-        </TouchableOpacity>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* Back Button */}
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.backButton}
+          >
+            <Ionicons name="arrow-back" size={24} color={theme.text} />
+          </TouchableOpacity>
 
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={[styles.headerTitle, { color: theme.text }]}>
-            Reset Password
-          </Text>
-          <Text style={[styles.headerSubtitle, { color: theme.textSecondary }]}>
-            Enter your email address and we'll send you a link to reset your
-            password
-          </Text>
-        </View>
+          {/* Promotional Section */}
+          <View style={styles.promotionalSection}>
+            <View style={[styles.promoIconContainer, { backgroundColor: '#FF6B35' }]}>
+              <Ionicons name="lock-closed-outline" size={32} color="#fff" />
+            </View>
+            <Text style={[styles.promoTitle, { color: theme.text }]}>
+              Forgot Password?
+            </Text>
+            <Text style={[styles.promoDescription, { color: theme.textSecondary }]}>
+              Don't worry! It happens to the best of us. Enter your email address and we'll send you a secure link to reset your password and get back to connecting with your community.
+            </Text>
+            
+            {/* Feature Cards */}
+            {/* <View style={styles.featureCardsContainer}> */}
+              {/* <View style={[styles.featureCard, { backgroundColor: theme.card, marginRight: 6 }]}>
+                <View style={[styles.featureIcon, { backgroundColor: '#FFF3E0' }]}>
+                  <Ionicons name="lock-closed-outline" size={20} color="#FF6B35" />
+                </View>
+                <Text style={[styles.featureTitle, { color: theme.text }]}>
+                  Secure Reset
+                </Text>
+                <Text style={[styles.featureDescription, { color: theme.textSecondary }]}>
+                  One-time secure link sent to your email
+                </Text>
+              </View> */}
+              
+              {/* <View style={[styles.featureCard, { backgroundColor: theme.card, marginLeft: 6 }]}>
+                <View style={[styles.featureIcon, { backgroundColor: '#E8F5E9' }]}>
+                  <Ionicons name="checkmark-circle-outline" size={20} color="#90BE6D" />
+                </View>
+                <Text style={[styles.featureTitle, { color: theme.text }]}>
+                  Easy Recovery
+                </Text>
+                <Text style={[styles.featureDescription, { color: theme.textSecondary }]}>
+                  Get back to your account immediately
+                </Text>
+              </View> */}
+            {/* </View> */}
+          </View>
 
-        {isResetSent ? (
-          // Success message
-          <View style={styles.successContainer}>
+          {isResetSent ? (
+            // Success message
+            <View style={styles.successContainer}>
             <View
               style={[
                 styles.successIcon,
@@ -136,9 +168,9 @@ const ForgotPasswordScreen = ({ navigation }: any) => {
               <Text style={styles.backToLoginText}>Back to Login</Text>
             </TouchableOpacity>
           </View>
-        ) : (
-          // Reset password form
-          <View style={styles.form}>
+          ) : (
+            // Reset password form
+            <View style={styles.form}>
             {errorMessage ? (
               <View
                 style={[
@@ -167,24 +199,30 @@ const ForgotPasswordScreen = ({ navigation }: any) => {
             ) : null}
 
             <View style={styles.inputGroup}>
-              <Text style={[styles.inputLabel, { color: theme.text }]}>
-                Email
-              </Text>
-              <TextInput
-                value={email}
-                onChangeText={(text) => {
-                  setEmail(text);
-                  setErrorMessage("");
-                }}
-                placeholder="Enter your email"
-                placeholderTextColor={theme.textMuted}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                style={[
-                  styles.input,
-                  { backgroundColor: theme.card, color: theme.text },
-                ]}
-              />
+              <View style={styles.labelContainer}>
+                <View style={[styles.labelDot, { backgroundColor: '#FF6B35' }]} />
+                <Text style={[styles.inputLabel, { color: theme.text }]}>
+                  Email Address
+                </Text>
+              </View>
+              <View style={[styles.inputContainer, { backgroundColor: theme.card }]}>
+                <Ionicons name="mail-outline" size={20} color={theme.textMuted} style={styles.inputIcon} />
+                <TextInput
+                  value={email}
+                  onChangeText={(text) => {
+                    setEmail(text);
+                    setErrorMessage("");
+                  }}
+                  placeholder="Enter your email address"
+                  placeholderTextColor={theme.textMuted}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  style={[
+                    styles.input,
+                    { color: theme.text },
+                  ]}
+                />
+              </View>
             </View>
 
             <TouchableOpacity
@@ -192,27 +230,65 @@ const ForgotPasswordScreen = ({ navigation }: any) => {
               disabled={isLoading || !email}
               style={[
                 styles.resetButton,
-                { backgroundColor: theme.primary },
                 (isLoading || !email) && styles.disabledButton,
               ]}
             >
-              {isLoading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.resetButtonText}>Send Reset Link</Text>
-              )}
+              <LinearGradient
+                colors={['#FF6B35', '#E63946']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.resetButtonGradient}
+              >
+                {isLoading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <>
+                    <Ionicons name="mail-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
+                    <Text style={styles.resetButtonText}>Send Reset Link</Text>
+                  </>
+                )}
+              </LinearGradient>
             </TouchableOpacity>
+
+            <View style={styles.rememberPasswordContainer}>
+              <Text style={[styles.rememberPasswordText, { color: theme.textSecondary }]}>
+                Remember your password?
+              </Text>
+            </View>
 
             <TouchableOpacity
               onPress={handleBackToLogin}
-              style={styles.backButton2}
+              style={[styles.backButton2, { borderColor: theme.border }]}
             >
-              <Text style={[styles.backButtonText, { color: theme.primary }]}>
-                Back to Login
+              <Ionicons name="arrow-back-outline" size={18} color={theme.text} style={{ marginRight: 8 }} />
+              <Text style={[styles.backButtonText, { color: theme.text }]}>
+                Back to Sign In
               </Text>
             </TouchableOpacity>
+
+            {/* Didn't receive email section */}
+            <View style={[styles.emailHelpContainer, { backgroundColor: '#E3F2FD' }]}>
+              <Ionicons name="information-circle-outline" size={20} color="#4361EE" style={{ marginRight: 12 }} />
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.emailHelpText, { color: theme.text }]}>
+                  Didn't receive the email? Check your spam folder or try these solutions:
+                </Text>
+                <View style={styles.emailHelpList}>
+                  <Text style={[styles.emailHelpItem, { color: theme.textSecondary }]}>
+                    • Verify your email address is correct
+                  </Text>
+                  <Text style={[styles.emailHelpItem, { color: theme.textSecondary }]}>
+                    • Check your spam/junk folder
+                  </Text>
+                  <Text style={[styles.emailHelpItem, { color: theme.textSecondary }]}>
+                    • Wait a few minutes and try again
+                  </Text>
+                </View>
+              </View>
+            </View>
           </View>
-        )}
+          )}
+        </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -232,17 +308,109 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-start",
   },
-  header: {
+  promotionalSection: {
     marginTop: 16,
     marginBottom: 32,
+    padding: 20,
+    borderRadius: 16,
+    backgroundColor: '#F3F4F6',
+  },
+  promoIconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 16,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  promoTitle: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 12,
+  },
+  promoDescription: {
+    fontSize: 16,
+    lineHeight: 24,
+    marginBottom: 5,
+  },
+  featureCardsContainer: {
+    flexDirection: "row",
+    marginBottom: 24,
+  },
+  featureCard: {
+    flex: 1,
+    padding: 16,
+    borderRadius: 12,
+  },
+  featureIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  featureTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 4,
+  },
+  featureDescription: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  helpSection: {
+    padding: 16,
+    borderRadius: 12,
+    marginTop: 8,
+  },
+  helpTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  helpText: {
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: 16,
+  },
+  contactSupportButton: {
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+  contactSupportGradient: {
+    paddingVertical: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  contactSupportText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 14,
+  },
+  header: {
+    marginTop: 8,
+    marginBottom: 32,
+    alignItems: "center",
+  },
+  headerIconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 14,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 16,
   },
   headerTitle: {
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 8,
+    textAlign: "center",
   },
   headerSubtitle: {
     fontSize: 16,
+    textAlign: "center",
     lineHeight: 22,
   },
   form: {
@@ -264,20 +432,45 @@ const styles = StyleSheet.create({
   inputGroup: {
     marginBottom: 24,
   },
+  labelContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  labelDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginRight: 8,
+  },
   inputLabel: {
     fontSize: 14,
-    marginBottom: 4,
+    fontWeight: "500",
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+  },
+  inputIcon: {
+    marginRight: 8,
   },
   input: {
+    flex: 1,
     padding: 12,
-    borderRadius: 8,
     fontSize: 16,
   },
   resetButton: {
-    paddingVertical: 12,
     borderRadius: 8,
-    alignItems: "center",
     marginTop: 8,
+    overflow: "hidden",
+  },
+  resetButtonGradient: {
+    paddingVertical: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   resetButtonText: {
     color: "white",
@@ -287,13 +480,47 @@ const styles = StyleSheet.create({
   disabledButton: {
     opacity: 0.7,
   },
-  backButton2: {
+  rememberPasswordContainer: {
     alignItems: "center",
     marginTop: 24,
+    marginBottom: 16,
+  },
+  rememberPasswordText: {
+    fontSize: 14,
+  },
+  backButton2: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    borderWidth: 1,
+    backgroundColor: "#fff",
+    marginBottom: 24,
   },
   backButtonText: {
-    fontWeight: "bold",
+    fontWeight: "500",
     fontSize: 16,
+  },
+  emailHelpContainer: {
+    flexDirection: "row",
+    padding: 16,
+    borderRadius: 12,
+    marginTop: 8,
+  },
+  emailHelpText: {
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: 8,
+  },
+  emailHelpList: {
+    marginTop: 4,
+  },
+  emailHelpItem: {
+    fontSize: 13,
+    lineHeight: 20,
+    marginBottom: 4,
   },
   successContainer: {
     flex: 1,
