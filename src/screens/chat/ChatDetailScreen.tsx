@@ -30,8 +30,6 @@ import { RootStackParamList } from "../../navigation/AppNavigator";
 import {
   togglePinChat,
   toggleArchiveChat,
-  markConversationAsRead,
-  updateUnreadMessageCount,
   toggleMuteChat,
 } from "../../utils/chatUtils";
 import { useTheme } from "../../contexts/ThemeContext";

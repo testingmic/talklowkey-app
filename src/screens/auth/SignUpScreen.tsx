@@ -342,7 +342,7 @@ const SignUpScreen = ({ navigation }: any) => {
           </View>
 
           {/* Skip Button */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={handleSkip}
             disabled={isLoading}
             style={[
@@ -354,7 +354,7 @@ const SignUpScreen = ({ navigation }: any) => {
             <Text style={[styles.skipButtonText, { color: theme.text }]}>
               Skip & Use Anonymously
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

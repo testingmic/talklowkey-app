@@ -122,15 +122,16 @@ const LoginScreen = ({ navigation }: any) => {
         style={styles.content}
       >
         {/* Logo and App Name */}
-        <View style={styles.logoContainer}>
+        <View style={[styles.logoContainer, { backgroundColor: '#e6e3fe', padding: 16, borderRadius: 16 }]}>
           <View style={[styles.logoIcon, { backgroundColor: theme.primary }]}>
             <Ionicons name="chatbubble-outline" size={40} color="#fff" />
           </View>
           <Text style={[styles.appName, { color: theme.text }]}>
             TalkLowKey
           </Text>
-          <Text style={[styles.appTagline, { color: theme.textSecondary }]}>
-            Connect anonymously with your local community
+          <Text style={[styles.appTagline, { color: '#000000' }]}>
+          Share thoughts, ideas, and experiences in a safe environment where your privacy is our priority. 
+          Connect with your community through secure, private messaging.
           </Text>
         </View>
 
@@ -252,15 +253,30 @@ const LoginScreen = ({ navigation }: any) => {
           </TouchableOpacity>
         </View>
 
+        <View style={[{ 
+            backgroundColor: '#fff', padding: 16, 
+            borderRadius: 16, alignItems: 'center', 
+            justifyContent: 'center',
+            borderWidth: 1,
+            borderColor: '#cccccc',
+          }]}>
+          <Text style={[{ color: '#000000', fontSize: 16, fontWeight: 'bold', textAlign: 'center' }]}>
+            Group & Individual
+          </Text>
+          <Text style={[{ color: '#000000', alignSelf: 'center', alignItems: 'center', textAlign: 'center' }]}>
+            Chat one-on-one or create group conversations with your friends, family, and community.
+          </Text>
+        </View>
+
         {/* Skip Button */}
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={handleSkip}
           style={[styles.skipButton, { borderColor: theme.border }]}
         >
           <Text style={[styles.skipButtonText, { color: theme.text }]}>
             Skip & Use Anonymously
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

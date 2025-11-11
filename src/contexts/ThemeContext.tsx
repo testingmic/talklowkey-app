@@ -60,7 +60,7 @@ const THEME_STORAGE_KEY = "whispernet_theme_mode";
 
 // Theme provider component
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   // Load theme preference from storage
@@ -85,7 +85,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     const newMode = !isDarkMode;
     setIsDarkMode(newMode);
     try {
-      await AsyncStorage.setItem(THEME_STORAGE_KEY, newMode ? "dark" : "light");
+      await AsyncStorage.setItem(THEME_STORAGE_KEY, newMode ? "light" : "dark");
     } catch (error) {
     }
   };
