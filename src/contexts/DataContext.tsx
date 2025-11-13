@@ -319,14 +319,14 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
     // Only load profile and settings data on login for better performance
     // Other data will be loaded on-demand when their respective pages are accessed
     await Promise.allSettled([
-      refreshProfileData(),
-      refreshUserSettings(),
+      // refreshProfileData(),
+      // refreshUserSettings(),
       // Removed: refreshSavedPosts(), refreshTrendingPosts(), refreshPopularTags()
       // These will be loaded when user navigates to respective pages
     ]);
   }, [
-    refreshProfileData,
-    refreshUserSettings,
+    // refreshProfileData,
+    // refreshUserSettings,
     // Removed dependencies: refreshSavedPosts, refreshTrendingPosts, refreshPopularTags
   ]);
 
