@@ -18,6 +18,8 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
+import { BlurView } from "expo-blur";
+import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import {
   SafeAreaView,
@@ -135,32 +137,59 @@ const ConversationItem = ({
   onPress: () => void;
   onLongPress: () => void;
 }) => {
-  const { theme } = useTheme();
+  const { theme, isDarkMode } = useTheme();
 
   return (
     <TouchableHighlight
       onPress={onPress}
       onLongPress={onLongPress}
-      underlayColor={theme.card}
+      underlayColor="transparent"
       style={[
         styles.conversationItem,
-        { borderColor: theme.border },
-        conversation.isPinned && [
-          styles.pinnedConversation,
-          { backgroundColor: `${theme.primary}10` },
-        ],
+        {
+          overflow: "hidden",
+        },
+        conversation.isPinned && styles.pinnedConversation,
       ]}
     >
-      <View style={styles.conversationInner}>
+      <View style={StyleSheet.absoluteFill}>
+        <BlurView
+          intensity={isDarkMode ? 20 : 30}
+          tint={isDarkMode ? "dark" : "light"}
+          style={StyleSheet.absoluteFill}
+        />
+        <LinearGradient
+          colors={
+            conversation.isPinned
+              ? isDarkMode
+                ? [`${theme.primary}30`, `${theme.primary}15`]
+                : [`${theme.primary}20`, `${theme.primary}10`]
+              : isDarkMode
+              ? ["rgba(30, 30, 30, 0.7)", "rgba(30, 30, 30, 0.5)"]
+              : ["rgba(255, 255, 255, 0.7)", "rgba(255, 255, 255, 0.5)"]
+          }
+          style={StyleSheet.absoluteFill}
+        />
         <View
           style={[
-            styles.avatarContainer,
+            styles.conversationInner,
             {
-              backgroundColor: conversation.isGroup ? "#6C63FF" : theme.primary,
+              borderWidth: 1,
+              borderColor: isDarkMode
+                ? "rgba(255, 255, 255, 0.1)"
+                : "rgba(0, 0, 0, 0.1)",
             },
-            conversation.isGroup && styles.groupAvatarContainer,
           ]}
         >
+          <View
+            style={[
+              styles.avatarContainer,
+              {
+                backgroundColor: conversation.isGroup ? "#6C63FF" : theme.primary,
+              },
+              conversation.isGroup && styles.groupAvatarContainer,
+            ]}
+          >
           {conversation.isGroup ? (
             <Ionicons name="people" size={24} color="white" />
           ) : (
@@ -244,6 +273,7 @@ const ConversationItem = ({
             </Text>
           </View>
         </View>
+        </View>
       </View>
     </TouchableHighlight>
   );
@@ -253,7 +283,7 @@ type TabType = "chats" | "groups";
 
 const ChatScreen = ({ navigation }: ChatScreenProps) => {
   const insets = useSafeAreaInsets();
-  const { theme } = useTheme();
+  const { theme, isDarkMode } = useTheme();
   const rootNavigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [searchQuery, setSearchQuery] = useState("");
@@ -932,105 +962,224 @@ const ChatScreen = ({ navigation }: ChatScreenProps) => {
       style={[styles.container, { backgroundColor: theme.background }]}
       edges={["top", "left", "right"]}
     >
-      <View style={[styles.header, { borderBottomColor: theme.border }]}>
-        <Text style={[styles.headerTitle, { color: theme.text }]}>
-          Messages
-        </Text>
-        <TouchableOpacity
-          style={styles.newMessageButton}
-          onPress={toggleSearchModal}
+      <View style={styles.headerContainer}>
+        <BlurView
+          intensity={30}
+          tint={isDarkMode ? "dark" : "light"}
+          style={StyleSheet.absoluteFill}
+        />
+        <LinearGradient
+          colors={
+            isDarkMode
+              ? ["rgba(18, 18, 18, 0.8)", "rgba(18, 18, 18, 0.6)"]
+              : ["rgba(248, 249, 250, 0.8)", "rgba(248, 249, 250, 0.6)"]
+          }
+          style={StyleSheet.absoluteFill}
+        />
+        <View
+          style={[
+            styles.header,
+            {
+              borderBottomWidth: 1,
+              borderBottomColor: isDarkMode
+                ? "rgba(255, 255, 255, 0.1)"
+                : "rgba(0, 0, 0, 0.1)",
+            },
+          ]}
         >
-          <Ionicons name="create-outline" size={22} color={theme.primary} />
-        </TouchableOpacity>
-      </View>
-
-      <View style={[styles.searchContainer, { backgroundColor: theme.card }]}>
-        <Ionicons
-          name="search"
-          size={18}
-          color={theme.textMuted}
-          style={styles.searchIcon}
-        />
-        <TextInput
-          style={[styles.searchInput, { color: theme.text }]}
-          placeholder="Search conversations"
-          placeholderTextColor={theme.textMuted}
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-        />
-        {searchQuery.length > 0 && (
+          <Text style={[styles.headerTitle, { color: theme.text }]}>
+            Messages
+          </Text>
           <TouchableOpacity
-            style={styles.clearButton}
-            onPress={() => setSearchQuery("")}
+            style={styles.newMessageButton}
+            onPress={toggleSearchModal}
           >
-            <Ionicons name="close-circle" size={18} color={theme.textMuted} />
+            <Ionicons name="create-outline" size={22} color={theme.primary} />
           </TouchableOpacity>
-        )}
+        </View>
       </View>
 
-      <View style={[styles.tabsContainer, { backgroundColor: theme.card }]}>
-        <TouchableOpacity
-          style={[
-            styles.tab,
-            activeTab === "chats" && [
-              styles.activeTab,
-              { backgroundColor: theme.primary },
-            ],
-          ]}
-          onPress={() => switchTab("chats")}
+      <View style={[styles.searchContainer, { overflow: "hidden" }]}>
+        <BlurView
+          intensity={20}
+          tint={isDarkMode ? "dark" : "light"}
+          style={StyleSheet.absoluteFill}
+        />
+        <LinearGradient
+          colors={
+            isDarkMode
+              ? ["rgba(30, 30, 30, 0.6)", "rgba(30, 30, 30, 0.4)"]
+              : ["rgba(255, 255, 255, 0.6)", "rgba(255, 255, 255, 0.4)"]
+          }
+          style={StyleSheet.absoluteFill}
+        />
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            paddingHorizontal: 12,
+            paddingVertical: 8,
+            borderWidth: 1,
+            borderColor: isDarkMode
+              ? "rgba(255, 255, 255, 0.1)"
+              : "rgba(0, 0, 0, 0.1)",
+            borderRadius: 10,
+          }}
         >
-          <Text
+          <Ionicons
+            name="search"
+            size={18}
+            color={theme.textMuted}
+            style={styles.searchIcon}
+          />
+          <TextInput
+            style={[styles.searchInput, { color: theme.text }]}
+            placeholder="Search conversations"
+            placeholderTextColor={theme.textMuted}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity
+              style={styles.clearButton}
+              onPress={() => setSearchQuery("")}
+            >
+              <Ionicons name="close-circle" size={18} color={theme.textMuted} />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+
+      <View style={[styles.tabsContainer, { overflow: "hidden" }]}>
+        <BlurView
+          intensity={20}
+          tint={isDarkMode ? "dark" : "light"}
+          style={StyleSheet.absoluteFill}
+        />
+        <LinearGradient
+          colors={
+            isDarkMode
+              ? ["rgba(30, 30, 30, 0.6)", "rgba(30, 30, 30, 0.4)"]
+              : ["rgba(255, 255, 255, 0.6)", "rgba(255, 255, 255, 0.4)"]
+          }
+          style={StyleSheet.absoluteFill}
+        />
+        <View
+          style={{
+            flexDirection: "row",
+            borderWidth: 1,
+            borderColor: isDarkMode
+              ? "rgba(255, 255, 255, 0.1)"
+              : "rgba(0, 0, 0, 0.1)",
+            borderRadius: 8,
+            overflow: "hidden",
+          }}
+        >
+          <TouchableOpacity
             style={[
-              styles.tabText,
-              { color: theme.textMuted },
+              styles.tab,
               activeTab === "chats" && [
-                styles.activeTabText,
-                { color: "#FFFFFF" },
+                styles.activeTab,
+                { overflow: "hidden" },
               ],
             ]}
+            onPress={() => switchTab("chats")}
           >
-            Chats
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.tab,
-            activeTab === "groups" && [
-              styles.activeTab,
-              { backgroundColor: theme.primary },
-            ],
-          ]}
-          onPress={() => switchTab("groups")}
-        >
-          <Text
+            {activeTab === "chats" && (
+              <LinearGradient
+                colors={[theme.primary, "#9C27B0"]}
+                style={StyleSheet.absoluteFill}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              />
+            )}
+            <Text
+              style={[
+                styles.tabText,
+                { color: theme.textMuted },
+                activeTab === "chats" && [
+                  styles.activeTabText,
+                  { color: "#FFFFFF" },
+                ],
+              ]}
+            >
+              Chats
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
             style={[
-              styles.tabText,
-              { color: theme.textMuted },
+              styles.tab,
               activeTab === "groups" && [
-                styles.activeTabText,
-                { color: "#FFFFFF" },
+                styles.activeTab,
+                { overflow: "hidden" },
               ],
             ]}
+            onPress={() => switchTab("groups")}
           >
-            Groups
-          </Text>
-        </TouchableOpacity>
+            {activeTab === "groups" && (
+              <LinearGradient
+                colors={[theme.primary, "#9C27B0"]}
+                style={StyleSheet.absoluteFill}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              />
+            )}
+            <Text
+              style={[
+                styles.tabText,
+                { color: theme.textMuted },
+                activeTab === "groups" && [
+                  styles.activeTabText,
+                  { color: "#FFFFFF" },
+                ],
+              ]}
+            >
+              Groups
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {archivedCount > 0 && (
         <TouchableOpacity
-          style={[styles.archivedBanner, { backgroundColor: theme.card }]}
+          style={[styles.archivedBanner, { overflow: "hidden" }]}
           onPress={toggleShowArchived}
         >
-          <Ionicons
-            name={showArchived ? "chevron-down" : "chevron-forward"}
-            size={18}
-            color={theme.primary}
+          <BlurView
+            intensity={20}
+            tint={isDarkMode ? "dark" : "light"}
+            style={StyleSheet.absoluteFill}
           />
-          <Text style={[styles.archivedText, { color: theme.primary }]}>
-            {showArchived ? "Hide" : "Show"} archived {activeTab} (
-            {archivedCount})
-          </Text>
+          <LinearGradient
+            colors={
+              isDarkMode
+                ? ["rgba(30, 30, 30, 0.6)", "rgba(30, 30, 30, 0.4)"]
+                : ["rgba(255, 255, 255, 0.6)", "rgba(255, 255, 255, 0.4)"]
+            }
+            style={StyleSheet.absoluteFill}
+          />
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingHorizontal: 16,
+              paddingVertical: 8,
+              borderWidth: 1,
+              borderColor: isDarkMode
+                ? "rgba(255, 255, 255, 0.1)"
+                : "rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            <Ionicons
+              name={showArchived ? "chevron-down" : "chevron-forward"}
+              size={18}
+              color={theme.primary}
+            />
+            <Text style={[styles.archivedText, { color: theme.primary }]}>
+              {showArchived ? "Hide" : "Show"} archived {activeTab} (
+              {archivedCount})
+            </Text>
+          </View>
         </TouchableOpacity>
       )}
 
@@ -1441,13 +1590,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headerContainer: {
+    overflow: "hidden",
+    position: "relative",
+  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    borderBottomWidth: 1,
   },
   headerTitle: {
     fontSize: 18,
@@ -1457,13 +1609,10 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
     borderRadius: 10,
     margin: 16,
     marginBottom: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    position: "relative",
   },
   searchIcon: {
     marginRight: 8,
@@ -1477,18 +1626,20 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   tabsContainer: {
-    flexDirection: "row",
     marginHorizontal: 16,
     marginBottom: 8,
     borderRadius: 8,
-    overflow: "hidden",
+    position: "relative",
   },
   tab: {
     flex: 1,
     paddingVertical: 10,
     alignItems: "center",
+    position: "relative",
   },
-  activeTab: {},
+  activeTab: {
+    position: "relative",
+  },
   tabText: {
     fontWeight: "500",
   },
@@ -1496,13 +1647,10 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   archivedBanner: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
     marginHorizontal: 16,
     marginBottom: 8,
     borderRadius: 8,
+    position: "relative",
   },
   archivedText: {
     marginLeft: 8,
@@ -1513,18 +1661,29 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   conversationItem: {
-    borderRadius: 8,
+    borderRadius: 16,
     marginBottom: 8,
-    borderWidth: 1,
-    borderColor: "transparent", // Will be overridden by theme
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   conversationInner: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 12,
-    paddingHorizontal: 8,
+    paddingHorizontal: 12,
+    borderRadius: 16,
   },
-  pinnedConversation: {},
+  pinnedConversation: {
+    shadowColor: "#4361EE",
+    shadowOpacity: 0.3,
+  },
   avatarContainer: {
     width: 50,
     height: 50,

@@ -14,6 +14,8 @@ import {
   ScrollView,
   Animated,
 } from "react-native";
+import { BlurView } from "expo-blur";
+import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -25,6 +27,7 @@ import { postService } from "../../services/postService";
 import CommentMenu from "../../components/posts/CommentMenu";
 import SwipableImageGallery from "../../components/ui/SwipableImageGallery";
 import PostContent from "../../components/ui/PostContent";
+import { cacheUtils } from "../../utils/cacheUtils";
 
 // Define the route param list
 type RootStackParamList = {
@@ -216,6 +219,7 @@ const CommentItem = ({
           "comments"
         );
       }
+      cacheUtils.clearCache();
     } catch (error) {
       // Revert to previous state
       setUpvotes(previousUpvotes);
@@ -290,6 +294,7 @@ const CommentItem = ({
           "comments"
         );
       }
+      cacheUtils.clearCache();
     } catch (error) {
       // Revert to previous state
       setUpvotes(previousUpvotes);
@@ -302,22 +307,35 @@ const CommentItem = ({
     <View
       style={[
         styles.commentContainer,
-        { backgroundColor: theme.card },
-        // Add shadow and border for light mode
-        !isDarkMode && {
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 1,
-          },
-          shadowOpacity: 0.05,
-          shadowRadius: 2,
-          elevation: 2,
-          borderWidth: 1,
-          borderColor: theme.border,
+        {
+          overflow: "hidden",
         },
       ]}
     >
+      <BlurView
+        intensity={isDarkMode ? 20 : 30}
+        tint={isDarkMode ? "dark" : "light"}
+        style={StyleSheet.absoluteFill}
+      />
+      <LinearGradient
+        colors={
+          isDarkMode
+            ? ["rgba(30, 30, 30, 0.7)", "rgba(30, 30, 30, 0.5)"]
+            : ["rgba(255, 255, 255, 0.7)", "rgba(255, 255, 255, 0.5)"]
+        }
+        style={StyleSheet.absoluteFill}
+      />
+      <View
+        style={[
+          styles.commentContent,
+          {
+            borderWidth: 1,
+            borderColor: isDarkMode
+              ? "rgba(255, 255, 255, 0.1)"
+              : "rgba(0, 0, 0, 0.1)",
+          },
+        ]}
+      >
       <View style={styles.commentHeader}>
         <View style={styles.userInfo}>
           <View
@@ -404,6 +422,7 @@ const CommentItem = ({
         isVisible={menuVisible}
         onClose={() => setMenuVisible(false)}
       />
+      </View>
     </View>
   );
 };
@@ -545,6 +564,7 @@ const PostDetailScreen = ({
           longitude
         );
       }
+      cacheUtils.clearCache();
     } catch (error) {
       // Revert to previous state
       setUpvotes(previousUpvotes);
@@ -615,6 +635,7 @@ const PostDetailScreen = ({
           longitude
         );
       }
+      cacheUtils.clearCache();
     } catch (error) {
       // Revert to previous state
       setUpvotes(previousUpvotes);
@@ -684,6 +705,7 @@ const PostDetailScreen = ({
         // Add the new comment to the list
         setComments([response.record, ...comments]);
         setCommentText("");
+        cacheUtils.clearCache();
       }
     } catch (error) {
       Alert.alert("Error", "Failed to submit comment. Please try again.");
@@ -701,6 +723,7 @@ const PostDetailScreen = ({
       setComments(
         comments.filter((comment) => comment.comment_id !== commentId)
       );
+      cacheUtils.clearCache();
     } catch (error) {
       Alert.alert("Error", "Failed to delete comment. Please try again.");
     }
@@ -711,22 +734,35 @@ const PostDetailScreen = ({
     <View
       style={[
         styles.postCard,
-        { backgroundColor: theme.card },
-        // Add shadow and border for light mode
-        !isDarkMode && {
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.1,
-          shadowRadius: 3.84,
-          elevation: 5,
-          borderWidth: 1,
-          borderColor: theme.border,
+        {
+          overflow: "hidden",
         },
       ]}
     >
+      <BlurView
+        intensity={isDarkMode ? 20 : 30}
+        tint={isDarkMode ? "dark" : "light"}
+        style={StyleSheet.absoluteFill}
+      />
+      <LinearGradient
+        colors={
+          isDarkMode
+            ? ["rgba(30, 30, 30, 0.7)", "rgba(30, 30, 30, 0.5)"]
+            : ["rgba(255, 255, 255, 0.7)", "rgba(255, 255, 255, 0.5)"]
+        }
+        style={StyleSheet.absoluteFill}
+      />
+      <View
+        style={[
+          styles.postCardContent,
+          {
+            borderWidth: 1,
+            borderColor: isDarkMode
+              ? "rgba(255, 255, 255, 0.1)"
+              : "rgba(0, 0, 0, 0.1)",
+          },
+        ]}
+      >
       <View style={styles.postHeader}>
         <View style={styles.userInfo}>
           <View style={[styles.userIcon, { backgroundColor: theme.primary }]}>
@@ -865,6 +901,7 @@ const PostDetailScreen = ({
           </TouchableOpacity>
         </View>
       </View>
+      </View>
     </View>
   );
 
@@ -874,15 +911,40 @@ const PostDetailScreen = ({
         style={[styles.container, { backgroundColor: theme.background }]}
         edges={["top", "left", "right"]}
       >
-        <View style={[styles.header, { borderBottomColor: theme.border }]}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.backButton}
+        <View style={styles.headerContainer}>
+          <BlurView
+            intensity={30}
+            tint={isDarkMode ? "dark" : "light"}
+            style={StyleSheet.absoluteFill}
+          />
+          <LinearGradient
+            colors={
+              isDarkMode
+                ? ["rgba(18, 18, 18, 0.8)", "rgba(18, 18, 18, 0.6)"]
+                : ["rgba(248, 249, 250, 0.8)", "rgba(248, 249, 250, 0.6)"]
+            }
+            style={StyleSheet.absoluteFill}
+          />
+          <View
+            style={[
+              styles.header,
+              {
+                borderBottomWidth: 1,
+                borderBottomColor: isDarkMode
+                  ? "rgba(255, 255, 255, 0.1)"
+                  : "rgba(0, 0, 0, 0.1)",
+              },
+            ]}
           >
-            <Ionicons name="arrow-back" size={24} color={theme.text} />
-          </TouchableOpacity>
-          <Text style={[styles.headerTitle, { color: theme.text }]}>Post</Text>
-          <View style={{ width: 24 }} />
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.backButton}
+            >
+              <Ionicons name="arrow-back" size={24} color={theme.text} />
+            </TouchableOpacity>
+            <Text style={[styles.headerTitle, { color: theme.text }]}>Post</Text>
+            <View style={{ width: 24 }} />
+          </View>
         </View>
 
         <KeyboardAvoidingView
@@ -918,38 +980,78 @@ const PostDetailScreen = ({
             />
           </View>
 
-          <View
-            style={[
-              styles.commentInputContainer,
-              { backgroundColor: theme.card, borderTopColor: theme.border },
-            ]}
-          >
-            <TextInput
-              ref={inputRef}
-              style={[
-                styles.commentInput,
-                { color: theme.text, backgroundColor: theme.inputBackground },
-              ]}
-              placeholder="Add a comment..."
-              placeholderTextColor={theme.textMuted}
-              value={commentText}
-              onChangeText={setCommentText}
-              multiline
+          <View style={[styles.commentInputContainer, { overflow: "hidden" }]}>
+            <BlurView
+              intensity={30}
+              tint={isDarkMode ? "dark" : "light"}
+              style={StyleSheet.absoluteFill}
             />
-            <TouchableOpacity
+            <LinearGradient
+              colors={
+                isDarkMode
+                  ? ["rgba(18, 18, 18, 0.8)", "rgba(18, 18, 18, 0.6)"]
+                  : ["rgba(248, 249, 250, 0.8)", "rgba(248, 249, 250, 0.6)"]
+              }
+              style={StyleSheet.absoluteFill}
+            />
+            <View
               style={[
-                styles.sendButton,
-                (!commentText.trim() || isSubmitting) && { opacity: 0.5 },
+                styles.commentInputContent,
+                {
+                  borderTopWidth: 1,
+                  borderTopColor: isDarkMode
+                    ? "rgba(255, 255, 255, 0.1)"
+                    : "rgba(0, 0, 0, 0.1)",
+                },
               ]}
-              onPress={handleSubmitComment}
-              disabled={!commentText.trim() || isSubmitting}
             >
-              {isSubmitting ? (
-                <ActivityIndicator size="small" color="#fff" />
-              ) : (
-                <Ionicons name="send" size={18} color="#fff" />
-              )}
-            </TouchableOpacity>
+              <View style={[styles.inputWrapper, { overflow: "hidden" }]}>
+                <BlurView
+                  intensity={15}
+                  tint={isDarkMode ? "dark" : "light"}
+                />
+                <TextInput
+                  ref={inputRef}
+                  style={[
+                    styles.commentInput,
+                    {
+                      color: theme.text,
+                      backgroundColor: "transparent",
+                      borderWidth: 1,
+                      borderColor: isDarkMode
+                        ? "rgba(255, 255, 255, 0.1)"
+                        : "rgba(0, 0, 0, 0.1)",
+                    },
+                    { minHeight: 45 },
+                  ]}
+                  placeholder="Leave a comment..."
+                  placeholderTextColor={theme.textMuted}
+                  value={commentText}
+                  onChangeText={setCommentText}
+                  multiline
+                />
+              </View>
+              <TouchableOpacity
+                style={[
+                  styles.sendButton,
+                  (!commentText.trim() || isSubmitting) && { opacity: 0.5 },
+                ]}
+                onPress={handleSubmitComment}
+                disabled={!commentText.trim() || isSubmitting}
+              >
+                <LinearGradient
+                  colors={[theme.primary, "#9C27B0"]}
+                  style={StyleSheet.absoluteFill}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                />
+                {isSubmitting ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  <Ionicons name="send" size={18} color="#fff" />
+                )}
+              </TouchableOpacity>
+            </View>
           </View>
         </KeyboardAvoidingView>
       </SafeAreaView>
@@ -967,7 +1069,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    borderBottomWidth: 1,
   },
   backButton: {
     padding: 4,
@@ -984,10 +1085,26 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   postCard: {
-    padding: 16,
-    borderRadius: 12,
+    borderRadius: 20,
     marginHorizontal: 16,
     marginVertical: 8,
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  postCardContent: {
+    padding: 16,
+    borderRadius: 20,
+  },
+  headerContainer: {
+    overflow: "hidden",
+    position: "relative",
   },
   postHeader: {
     flexDirection: "row",
@@ -1085,10 +1202,21 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   commentContainer: {
-    backgroundColor: "#1E1E1E",
-    borderRadius: 12,
-    padding: 12,
+    borderRadius: 16,
     marginBottom: 8,
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  commentContent: {
+    padding: 12,
+    borderRadius: 16,
   },
   commentHeader: {
     flexDirection: "row",
@@ -1110,33 +1238,38 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   commentInputContainer: {
+    position: "relative",
+  },
+  commentInputContent: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1E1E1E",
-    borderTopWidth: 1,
-    borderTopColor: "#2D2D2D",
     paddingHorizontal: 12,
     paddingVertical: 8,
     paddingBottom: Platform.OS === "ios" ? 24 : 8,
   },
+  inputWrapper: {
+    flex: 1,
+    borderRadius: 20,
+    marginRight: 8,
+    position: "relative",
+  },
   commentInput: {
     flex: 1,
-    backgroundColor: "#2D2D2D",
     borderRadius: 20,
     paddingHorizontal: 16,
     paddingVertical: 8,
     maxHeight: 100,
-    color: "#F8F9FA",
     fontSize: 14,
   },
   sendButton: {
-    backgroundColor: "#4361EE",
     width: 36,
     height: 36,
     borderRadius: 18,
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: 8,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.2)",
   },
   disabledButton: {
     backgroundColor: "#2D2D2D",

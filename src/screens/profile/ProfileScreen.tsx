@@ -10,6 +10,8 @@ import {
   Image,
   ActivityIndicator,
 } from "react-native";
+import { BlurView } from "expo-blur";
+import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../contexts/AuthContext";
@@ -158,7 +160,7 @@ const OptimizedProfileImage: React.FC<OptimizedProfileImageProps> = ({
 
 const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
   const { user, logout } = useAuth();
-  const { theme } = useTheme();
+  const { theme, isDarkMode } = useTheme();
   const {
     profileData,
     savedPostsCount,
@@ -294,20 +296,59 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
         {!user?.isAnonymous && (
           <>
             {loading ? (
-              <View
-                style={[styles.statsContainer, { borderColor: theme.border }]}
-              >
-                <ActivityIndicator size="small" color={theme.primary} />
-                <Text
-                  style={[styles.loadingText, { color: theme.textSecondary }]}
+              <View style={[styles.statsContainer, { overflow: "hidden" }]}>
+                <BlurView
+                  intensity={20}
+                  tint={isDarkMode ? "dark" : "light"}
+                  style={StyleSheet.absoluteFill}
+                />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                    paddingVertical: 20,
+                    borderTopWidth: 1,
+                    borderBottomWidth: 1,
+                    borderColor: isDarkMode
+                      ? "rgba(255, 255, 255, 0.1)"
+                      : "rgba(0, 0, 0, 0.1)",
+                  }}
                 >
-                  Loading profile...
-                </Text>
+                  <ActivityIndicator size="small" color={theme.primary} />
+                  <Text
+                    style={[styles.loadingText, { color: theme.textSecondary }]}
+                  >
+                    Loading profile...
+                  </Text>
+                </View>
               </View>
             ) : (
-              <View
-                style={[styles.statsContainer, { borderColor: theme.border }]}
-              >
+              <View style={[styles.statsContainer, { overflow: "hidden" }]}>
+                <BlurView
+                  intensity={20}
+                  tint={isDarkMode ? "dark" : "light"}
+                  style={StyleSheet.absoluteFill}
+                />
+                <LinearGradient
+                  colors={
+                    isDarkMode
+                      ? ["rgba(30, 30, 30, 0.6)", "rgba(30, 30, 30, 0.4)"]
+                      : ["rgba(255, 255, 255, 0.6)", "rgba(255, 255, 255, 0.4)"]
+                  }
+                  style={StyleSheet.absoluteFill}
+                />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                    paddingVertical: 20,
+                    borderTopWidth: 1,
+                    borderBottomWidth: 1,
+                    borderColor: isDarkMode
+                      ? "rgba(255, 255, 255, 0.1)"
+                      : "rgba(0, 0, 0, 0.1)",
+                  }}
+                >
                 <View style={styles.statItem}>
                   <Text style={[styles.statValue, { color: theme.text }]}>
                     {profileData?.statistics?.posts || 0}
@@ -349,6 +390,7 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
                     Saved
                   </Text>
                 </TouchableOpacity>
+                </View>
               </View>
             )}
           </>
@@ -357,9 +399,25 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
         <View style={styles.optionsContainer}>
           {!user?.isAnonymous && (
             <TouchableOpacity
-              style={[styles.optionButton, { borderBottomColor: theme.border }]}
+              style={[styles.optionButton, { overflow: "hidden" }]}
               onPress={navigateToEditProfile}
             >
+              <BlurView
+                intensity={15}
+                tint={isDarkMode ? "dark" : "light"}
+                style={StyleSheet.absoluteFill}
+              />
+              <View
+                style={[
+                  styles.optionButtonContent,
+                  {
+                    borderBottomWidth: 1,
+                    borderBottomColor: isDarkMode
+                      ? "rgba(255, 255, 255, 0.1)"
+                      : "rgba(0, 0, 0, 0.1)",
+                  },
+                ]}
+              >
               <Ionicons name="person-outline" size={24} color={theme.text} />
               <Text style={[styles.optionText, { color: theme.text }]}>
                 Edit Profile
@@ -370,14 +428,31 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
                 color={theme.textMuted}
                 style={styles.optionIcon}
               />
+              </View>
             </TouchableOpacity>
           )}
 
           {!user?.isAnonymous && (
             <TouchableOpacity
-              style={[styles.optionButton, { borderBottomColor: theme.border }]}
+              style={[styles.optionButton, { overflow: "hidden" }]}
               onPress={navigateToAccountSettings}
             >
+              <BlurView
+                intensity={15}
+                tint={isDarkMode ? "dark" : "light"}
+                style={StyleSheet.absoluteFill}
+              />
+              <View
+                style={[
+                  styles.optionButtonContent,
+                  {
+                    borderBottomWidth: 1,
+                    borderBottomColor: isDarkMode
+                      ? "rgba(255, 255, 255, 0.1)"
+                      : "rgba(0, 0, 0, 0.1)",
+                  },
+                ]}
+              >
               <Ionicons name="settings-outline" size={24} color={theme.text} />
               <Text style={[styles.optionText, { color: theme.text }]}>
                 Account Settings
@@ -388,13 +463,30 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
                 color={theme.textMuted}
                 style={styles.optionIcon}
               />
+              </View>
             </TouchableOpacity>
           )}
 
           <TouchableOpacity
-            style={[styles.optionButton, { borderBottomColor: theme.border }]}
+            style={[styles.optionButton, { overflow: "hidden" }]}
             onPress={() => navigation.navigate("Privacy")}
           >
+            <BlurView
+              intensity={15}
+              tint={isDarkMode ? "dark" : "light"}
+              style={StyleSheet.absoluteFill}
+            />
+            <View
+              style={[
+                styles.optionButtonContent,
+                {
+                  borderBottomWidth: 1,
+                  borderBottomColor: isDarkMode
+                    ? "rgba(255, 255, 255, 0.1)"
+                    : "rgba(0, 0, 0, 0.1)",
+                },
+              ]}
+            >
             <Ionicons name="shield-outline" size={24} color={theme.text} />
             <Text style={[styles.optionText, { color: theme.text }]}>
               Privacy Policy
@@ -405,84 +497,168 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
               color={theme.textMuted}
               style={styles.optionIcon}
             />
+            </View>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.optionButton, { borderBottomColor: theme.border }]}
+            style={[styles.optionButton, { overflow: "hidden" }]}
             onPress={() => navigation.navigate("Terms")}
           >
-            <Ionicons
-              name="document-text-outline"
-              size={24}
-              color={theme.text}
+            <BlurView
+              intensity={15}
+              tint={isDarkMode ? "dark" : "light"}
+              style={StyleSheet.absoluteFill}
             />
-            <Text style={[styles.optionText, { color: theme.text }]}>
-              Terms of Service
-            </Text>
-            <Ionicons
-              name="chevron-forward"
-              size={20}
-              color={theme.textMuted}
-              style={styles.optionIcon}
-            />
+            <View
+              style={[
+                styles.optionButtonContent,
+                {
+                  borderBottomWidth: 1,
+                  borderBottomColor: isDarkMode
+                    ? "rgba(255, 255, 255, 0.1)"
+                    : "rgba(0, 0, 0, 0.1)",
+                },
+              ]}
+            >
+              <Ionicons
+                name="document-text-outline"
+                size={24}
+                color={theme.text}
+              />
+              <Text style={[styles.optionText, { color: theme.text }]}>
+                Terms of Service
+              </Text>
+              <Ionicons
+                name="chevron-forward"
+                size={20}
+                color={theme.textMuted}
+                style={styles.optionIcon}
+              />
+            </View>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.optionButton, { borderBottomColor: theme.border }]}
+            style={[styles.optionButton, { overflow: "hidden" }]}
             onPress={() => navigation.navigate("SavedPosts")}
           >
-            <Ionicons name="bookmark-outline" size={24} color={theme.text} />
-            <Text style={[styles.optionText, { color: theme.text }]}>
-              Saved Posts
-            </Text>
-            <Ionicons
-              name="chevron-forward"
-              size={20}
-              color={theme.textMuted}
-              style={styles.optionIcon}
+            <BlurView
+              intensity={15}
+              tint={isDarkMode ? "dark" : "light"}
+              style={StyleSheet.absoluteFill}
             />
+            <View
+              style={[
+                styles.optionButtonContent,
+                {
+                  borderBottomWidth: 1,
+                  borderBottomColor: isDarkMode
+                    ? "rgba(255, 255, 255, 0.1)"
+                    : "rgba(0, 0, 0, 0.1)",
+                },
+              ]}
+            >
+              <Ionicons name="bookmark-outline" size={24} color={theme.text} />
+              <Text style={[styles.optionText, { color: theme.text }]}>
+                Saved Posts
+              </Text>
+              <Ionicons
+                name="chevron-forward"
+                size={20}
+                color={theme.textMuted}
+                style={styles.optionIcon}
+              />
+            </View>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.optionButton, { borderBottomColor: theme.border }]}
+            style={[styles.optionButton, { overflow: "hidden" }]}
             onPress={() => navigation.navigate("HelpSupport")}
           >
-            <Ionicons name="help-circle-outline" size={24} color={theme.text} />
-            <Text style={[styles.optionText, { color: theme.text }]}>
-              Help & Support
-            </Text>
-            <Ionicons
-              name="chevron-forward"
-              size={20}
-              color={theme.textMuted}
-              style={styles.optionIcon}
+            <BlurView
+              intensity={15}
+              tint={isDarkMode ? "dark" : "light"}
+              style={StyleSheet.absoluteFill}
             />
+            <View
+              style={[
+                styles.optionButtonContent,
+                {
+                  borderBottomWidth: 1,
+                  borderBottomColor: isDarkMode
+                    ? "rgba(255, 255, 255, 0.1)"
+                    : "rgba(0, 0, 0, 0.1)",
+                },
+              ]}
+            >
+              <Ionicons name="help-circle-outline" size={24} color={theme.text} />
+              <Text style={[styles.optionText, { color: theme.text }]}>
+                Help & Support
+              </Text>
+              <Ionicons
+                name="chevron-forward"
+                size={20}
+                color={theme.textMuted}
+                style={styles.optionIcon}
+              />
+            </View>
           </TouchableOpacity>
 
           {user?.isAnonymous && (
             <TouchableOpacity
-              style={[styles.optionButton, { borderBottomColor: theme.border }]}
+              style={[styles.optionButton, { overflow: "hidden" }]}
               onPress={handleCreateAccount}
             >
-              <Ionicons
-                name="person-add-outline"
-                size={24}
-                color={theme.primary}
+              <BlurView
+                intensity={15}
+                tint={isDarkMode ? "dark" : "light"}
+                style={StyleSheet.absoluteFill}
               />
-              <Text style={[styles.optionText, { color: theme.primary }]}>
-                Create Account
-              </Text>
+              <View
+                style={[
+                  styles.optionButtonContent,
+                  {
+                    borderBottomWidth: 1,
+                    borderBottomColor: isDarkMode
+                      ? "rgba(255, 255, 255, 0.1)"
+                      : "rgba(0, 0, 0, 0.1)",
+                  },
+                ]}
+              >
+                <Ionicons
+                  name="person-add-outline"
+                  size={24}
+                  color={theme.primary}
+                />
+                <Text style={[styles.optionText, { color: theme.primary }]}>
+                  Create Account
+                </Text>
+              </View>
             </TouchableOpacity>
           )}
 
           <TouchableOpacity
-            style={[styles.optionButton, styles.logoutButton]}
+            style={[styles.optionButton, styles.logoutButton, { overflow: "hidden" }]}
             onPress={handleLogout}
           >
-            <Ionicons name="log-out-outline" size={24} color={theme.error} />
-            <Text style={[styles.optionText, { color: theme.error }]}>
-              {user?.isAnonymous ? "Exit Anonymous Mode" : "Log Out"}
-            </Text>
+            <BlurView
+              intensity={15}
+              tint={isDarkMode ? "dark" : "light"}
+              style={StyleSheet.absoluteFill}
+            />
+            <LinearGradient
+              colors={
+                isDarkMode
+                  ? ["rgba(220, 53, 69, 0.3)", "rgba(220, 53, 69, 0.2)"]
+                  : ["rgba(220, 53, 69, 0.2)", "rgba(220, 53, 69, 0.1)"]
+              }
+              style={StyleSheet.absoluteFill}
+            />
+            <View style={styles.optionButtonContent}>
+              <Ionicons name="log-out-outline" size={24} color={theme.error} />
+              <Text style={[styles.optionText, { color: theme.error }]}>
+                {user?.isAnonymous ? "Exit Anonymous Mode" : "Log Out"}
+              </Text>
+            </View>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -523,13 +699,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   statsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingVertical: 20,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
     marginHorizontal: 20,
     marginBottom: 20,
+    borderRadius: 16,
+    position: "relative",
   },
   statItem: {
     alignItems: "center",
@@ -551,10 +724,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   optionButton: {
+    borderRadius: 12,
+    marginBottom: 8,
+    position: "relative",
+    overflow: "hidden",
+  },
+  optionButtonContent: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 16,
-    borderBottomWidth: 1,
+    paddingHorizontal: 4,
   },
   optionText: {
     fontSize: 16,
@@ -567,7 +746,6 @@ const styles = StyleSheet.create({
   logoutButton: {
     marginTop: 16,
     marginBottom: 40,
-    borderBottomWidth: 0,
   },
   usernameContainer: {
     flexDirection: "row",

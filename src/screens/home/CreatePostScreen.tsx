@@ -13,6 +13,8 @@ import {
   Platform,
   FlatList,
 } from "react-native";
+import { BlurView } from "expo-blur";
+import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -21,6 +23,7 @@ import { RootStackParamList } from "../../navigation/AppNavigator";
 import * as ImagePicker from "expo-image-picker";
 import * as VideoThumbnails from "expo-video-thumbnails";
 import { useAuth } from "../../contexts/AuthContext";
+import { useTheme } from "../../contexts/ThemeContext";
 
 // Define media type
 type MediaType = "image" | "video";
@@ -58,6 +61,7 @@ const CreatePostScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { user } = useAuth();
+  const { theme, isDarkMode } = useTheme();
   const [postText, setPostText] = useState("");
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -304,10 +308,34 @@ const CreatePostScreen = () => {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
       >
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.cancelButton}
-            onPress={() => {
+        <View style={styles.headerContainer}>
+          <BlurView
+            intensity={30}
+            tint={isDarkMode ? "dark" : "light"}
+            style={StyleSheet.absoluteFill}
+          />
+          <LinearGradient
+            colors={
+              isDarkMode
+                ? ["rgba(18, 18, 18, 0.8)", "rgba(18, 18, 18, 0.6)"]
+                : ["rgba(248, 249, 250, 0.8)", "rgba(248, 249, 250, 0.6)"]
+            }
+            style={StyleSheet.absoluteFill}
+          />
+          <View
+            style={[
+              styles.header,
+              {
+                borderBottomWidth: 1,
+                borderBottomColor: isDarkMode
+                  ? "rgba(255, 255, 255, 0.1)"
+                  : "rgba(0, 0, 0, 0.1)",
+              },
+            ]}
+          >
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={() => {
               if (postText.trim() || mediaItems.length > 0) {
                 Alert.alert(
                   "Discard Post",
@@ -347,15 +375,40 @@ const CreatePostScreen = () => {
               <Text style={styles.postButtonText}>Post</Text>
             )}
           </TouchableOpacity>
+          </View>
         </View>
 
         <ScrollView style={styles.content}>
-          <View style={styles.userInfoContainer}>
-            <View style={styles.userIcon}>
-              <Text style={styles.userIconText}>
-                {user?.username ? user.username[0].toUpperCase() : "A"}
-              </Text>
-            </View>
+          <View style={[styles.userInfoContainer, { overflow: "hidden" }]}>
+            <BlurView
+              intensity={20}
+              tint={isDarkMode ? "dark" : "light"}
+              style={StyleSheet.absoluteFill}
+            />
+            <LinearGradient
+              colors={
+                isDarkMode
+                  ? ["rgba(30, 30, 30, 0.6)", "rgba(30, 30, 30, 0.4)"]
+                  : ["rgba(255, 255, 255, 0.6)", "rgba(255, 255, 255, 0.4)"]
+              }
+              style={StyleSheet.absoluteFill}
+            />
+            <View
+              style={[
+                styles.userInfoContent,
+                {
+                  borderWidth: 1,
+                  borderColor: isDarkMode
+                    ? "rgba(255, 255, 255, 0.1)"
+                    : "rgba(0, 0, 0, 0.1)",
+                },
+              ]}
+            >
+              <View style={styles.userIcon}>
+                <Text style={styles.userIconText}>
+                  {user?.username ? user.username[0].toUpperCase() : "A"}
+                </Text>
+              </View>
             <View style={styles.locationContainer}>
               <Text style={styles.username}>
                 {user?.username || "Anonymous User"}
@@ -373,21 +426,38 @@ const CreatePostScreen = () => {
                 />
               </TouchableOpacity>
             </View>
+            </View>
           </View>
 
-          <TextInput
-            style={styles.postInput}
-            placeholder="What's happening in your neighborhood?"
-            placeholderTextColor="#6c757d"
-            multiline
-            value={postText}
-            onChangeText={(text) => {
-              if (text.length <= MAX_CHARS) {
-                setPostText(text);
-              }
-            }}
-            autoFocus
-          />
+          <View style={[styles.inputContainer, { overflow: "hidden" }]}>
+            <BlurView
+              intensity={15}
+              tint={isDarkMode ? "dark" : "light"}
+              style={StyleSheet.absoluteFill}
+            />
+            <TextInput
+              style={[
+                styles.postInput,
+                {
+                  color: theme.text,
+                  borderWidth: 1,
+                  borderColor: isDarkMode
+                    ? "rgba(255, 255, 255, 0.1)"
+                    : "rgba(0, 0, 0, 0.1)",
+                },
+              ]}
+              placeholder="What's happening in your neighborhood?"
+              placeholderTextColor={theme.textMuted}
+              multiline
+              value={postText}
+              onChangeText={(text) => {
+                if (text.length <= MAX_CHARS) {
+                  setPostText(text);
+                }
+              }}
+              autoFocus
+            />
+          </View>
 
           <View style={styles.charCountContainer}>
             <Text
@@ -413,8 +483,30 @@ const CreatePostScreen = () => {
           )}
 
           {showLocationPicker && (
-            <View style={styles.locationPickerContainer}>
-              <View style={styles.locationSearchContainer}>
+            <View style={[styles.locationPickerContainer, { overflow: "hidden" }]}>
+              <BlurView
+                intensity={25}
+                tint={isDarkMode ? "dark" : "light"}
+                style={StyleSheet.absoluteFill}
+              />
+              <LinearGradient
+                colors={
+                  isDarkMode
+                    ? ["rgba(30, 30, 30, 0.8)", "rgba(30, 30, 30, 0.6)"]
+                    : ["rgba(255, 255, 255, 0.8)", "rgba(255, 255, 255, 0.6)"]
+                }
+                style={StyleSheet.absoluteFill}
+              />
+              <View
+                style={{
+                  borderWidth: 1,
+                  borderColor: isDarkMode
+                    ? "rgba(255, 255, 255, 0.1)"
+                    : "rgba(0, 0, 0, 0.1)",
+                  borderRadius: 16,
+                }}
+              >
+                <View style={styles.locationSearchContainer}>
                 <Ionicons name="search" size={16} color="#6c757d" />
                 <TextInput
                   style={styles.locationSearchInput}
@@ -468,15 +560,40 @@ const CreatePostScreen = () => {
                 )}
                 style={styles.locationsList}
               />
+              </View>
             </View>
           )}
         </ScrollView>
 
-        <View style={styles.mediaButtonsContainer}>
-          <TouchableOpacity
-            style={styles.mediaButton}
-            onPress={handleTakePhoto}
+        <View style={[styles.mediaButtonsContainer, { overflow: "hidden" }]}>
+          <BlurView
+            intensity={30}
+            tint={isDarkMode ? "dark" : "light"}
+            style={StyleSheet.absoluteFill}
+          />
+          <LinearGradient
+            colors={
+              isDarkMode
+                ? ["rgba(18, 18, 18, 0.8)", "rgba(18, 18, 18, 0.6)"]
+                : ["rgba(248, 249, 250, 0.8)", "rgba(248, 249, 250, 0.6)"]
+            }
+            style={StyleSheet.absoluteFill}
+          />
+          <View
+            style={[
+              styles.mediaButtonsContent,
+              {
+                borderTopWidth: 1,
+                borderTopColor: isDarkMode
+                  ? "rgba(255, 255, 255, 0.1)"
+                  : "rgba(0, 0, 0, 0.1)",
+              },
+            ]}
           >
+            <TouchableOpacity
+              style={styles.mediaButton}
+              onPress={handleTakePhoto}
+            >
             <Ionicons name="camera-outline" size={24} color="#4361EE" />
           </TouchableOpacity>
           <TouchableOpacity
@@ -496,6 +613,7 @@ const CreatePostScreen = () => {
               {mediaItems.length}/{MAX_MEDIA_ITEMS}
             </Text>
           </View>
+          </View>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -507,14 +625,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#121212",
   },
+  headerContainer: {
+    overflow: "hidden",
+    position: "relative",
+  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#2D2D2D",
   },
   headerTitle: {
     fontSize: 18,
@@ -529,10 +649,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   postButton: {
-    backgroundColor: "#4361EE",
+    backgroundColor: "rgba(67, 97, 238, 0.9)",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.2)",
+    shadowColor: "#4361EE",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+    elevation: 4,
   },
   disabledButton: {
     backgroundColor: "#2D2D2D",
@@ -546,9 +677,15 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   userInfoContainer: {
+    borderRadius: 16,
+    marginBottom: 16,
+    position: "relative",
+  },
+  userInfoContent: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 16,
+    padding: 12,
+    borderRadius: 16,
   },
   userIcon: {
     width: 40,
@@ -582,12 +719,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginHorizontal: 4,
   },
+  inputContainer: {
+    borderRadius: 16,
+    marginBottom: 12,
+    position: "relative",
+    overflow: "hidden",
+  },
   postInput: {
-    color: "#F8F9FA",
     fontSize: 16,
     lineHeight: 24,
     minHeight: 100,
     textAlignVertical: "top",
+    padding: 16,
+    borderRadius: 16,
+    backgroundColor: "transparent",
   },
   charCountContainer: {
     alignItems: "flex-end",
@@ -604,9 +749,10 @@ const styles = StyleSheet.create({
     color: "#dc3545",
   },
   mediaButtonsContainer: {
+    position: "relative",
+  },
+  mediaButtonsContent: {
     flexDirection: "row",
-    borderTopWidth: 1,
-    borderTopColor: "#2D2D2D",
     paddingVertical: 12,
     paddingHorizontal: 16,
     alignItems: "center",
@@ -655,9 +801,8 @@ const styles = StyleSheet.create({
   },
   locationPickerContainer: {
     marginTop: 12,
-    backgroundColor: "#1E1E1E",
-    borderRadius: 8,
-    overflow: "hidden",
+    borderRadius: 16,
+    position: "relative",
   },
   locationSearchContainer: {
     flexDirection: "row",

@@ -15,6 +15,8 @@ import {
   Animated,
   ActivityIndicator,
 } from "react-native";
+import { BlurView } from "expo-blur";
+import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../contexts/AuthContext";
@@ -241,22 +243,35 @@ const PostCard = ({
     <View
       style={[
         styles.postCard,
-        { backgroundColor: theme.card },
-        // Add shadow and border for light mode
-        !isDarkMode && {
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.1,
-          shadowRadius: 3.84,
-          elevation: 5,
-          borderWidth: 1,
-          borderColor: theme.border,
+        {
+          overflow: "hidden",
         },
       ]}
     >
+      <BlurView
+        intensity={isDarkMode ? 20 : 30}
+        tint={isDarkMode ? "dark" : "light"}
+        style={StyleSheet.absoluteFill}
+      />
+      <LinearGradient
+        colors={
+          isDarkMode
+            ? ["rgba(30, 30, 30, 0.7)", "rgba(30, 30, 30, 0.5)"]
+            : ["rgba(255, 255, 255, 0.7)", "rgba(255, 255, 255, 0.5)"]
+        }
+        style={StyleSheet.absoluteFill}
+      />
+      <View
+        style={[
+          styles.postCardContent,
+          {
+            borderWidth: 1,
+            borderColor: isDarkMode
+              ? "rgba(255, 255, 255, 0.1)"
+              : "rgba(0, 0, 0, 0.1)",
+          },
+        ]}
+      >
       <View style={styles.postHeader}>
         <View style={styles.userInfo}>
           {post.profile_image ? (
@@ -414,13 +429,14 @@ const PostCard = ({
           </TouchableOpacity>
         </View>
       </View>
+      </View>
     </View>
   );
 };
 
 const HomeScreen = ({ navigation }: HomeScreenProps) => {
   const { user } = useAuth();
-  const { theme } = useTheme();
+  const { theme, isDarkMode } = useTheme();
   const route = useRoute();
   const routeParams = route.params as
     | { hashtag?: string; hashtagCount?: number }
@@ -1220,6 +1236,7 @@ const HomeScreen = ({ navigation }: HomeScreenProps) => {
           longitude
         );
       }
+      cacheUtils.clearCache();
 
       // Convert VoteType back to manage.voted format
       let manageVoted: "up" | "down" | false = false;
@@ -1622,10 +1639,34 @@ const HomeScreen = ({ navigation }: HomeScreenProps) => {
       style={[styles.container, { backgroundColor: theme.background }]}
       edges={["top", "left", "right"]}
     >
-      <View style={[styles.header, { borderBottomColor: theme.border }]}>
-        <Text style={[styles.headerTitle, { color: theme.text }]}>
-          TalkLowKey
-        </Text>
+      <View style={styles.headerContainer}>
+        <BlurView
+          intensity={30}
+          tint={theme.statusBar === "light" ? "dark" : "light"}
+          style={StyleSheet.absoluteFill}
+        />
+        <LinearGradient
+          colors={
+            isDarkMode
+              ? ["rgba(18, 18, 18, 0.8)", "rgba(18, 18, 18, 0.6)"]
+              : ["rgba(248, 249, 250, 0.8)", "rgba(248, 249, 250, 0.6)"]
+          }
+          style={StyleSheet.absoluteFill}
+        />
+        <View
+          style={[
+            styles.header,
+            {
+              borderBottomWidth: 1,
+              borderBottomColor: isDarkMode
+                ? "rgba(255, 255, 255, 0.1)"
+                : "rgba(0, 0, 0, 0.1)",
+            },
+          ]}
+        >
+          <Text style={[styles.headerTitle, { color: theme.text }]}>
+            TalkLowKey
+          </Text>
         <View style={styles.headerRightContainer}>
           {activeHashtag ? (
             // Show hashtag pill when filtering by hashtag
@@ -1671,23 +1712,31 @@ const HomeScreen = ({ navigation }: HomeScreenProps) => {
             )}
           </TouchableOpacity>
         </View>
+        </View>
       </View>
 
       {/* New Posts Available Banner */}
       {showNewPostsBanner && !activeHashtag && (
         <TouchableOpacity
-          style={[styles.newPostsBanner, { backgroundColor: theme.primary }]}
+          style={[styles.newPostsBanner, { overflow: "hidden" }]}
           onPress={handleRefreshWithNewPosts}
         >
+          <BlurView intensity={40} tint="light" style={StyleSheet.absoluteFill} />
+          <LinearGradient
+            colors={[theme.primary, "#9C27B0"]}
+            style={StyleSheet.absoluteFill}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+          />
           <View style={styles.newPostsBannerContent}>
             <Ionicons name="arrow-up-circle" size={20} color="#FFFFFF" />
             <Text style={styles.newPostsBannerText}>
               New posts available • Tap to refresh
             </Text>
+            {isBackgroundFetching && (
+              <ActivityIndicator size="small" color="#FFFFFF" />
+            )}
           </View>
-          {isBackgroundFetching && (
-            <ActivityIndicator size="small" color="#FFFFFF" />
-          )}
         </TouchableOpacity>
       )}
 
@@ -1939,8 +1988,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#2D2D2D",
     marginBottom: 0,
   },
   headerTitle: {
@@ -1964,11 +2011,14 @@ const styles = StyleSheet.create({
   locationDisplay: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(67, 97, 238, 0.1)",
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 16,
+    backgroundColor: "rgba(67, 97, 238, 0.15)",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
     marginRight: 12,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "rgba(67, 97, 238, 0.3)",
   },
   newPostsBanner: {
     flexDirection: "row",
@@ -1999,11 +2049,22 @@ const styles = StyleSheet.create({
   hashtagPill: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#4361EE",
+    backgroundColor: "rgba(67, 97, 238, 0.9)",
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 8,
     borderRadius: 20,
     marginRight: 12,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.2)",
+    shadowColor: "#4361EE",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+    elevation: 4,
   },
   hashtagPillText: {
     color: "#FFFFFF",
@@ -2042,11 +2103,27 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   postCard: {
-    backgroundColor: "#1E1E1E",
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: 20,
     marginTop: 10,
     marginBottom: 0,
+    marginHorizontal: 10,
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  postCardContent: {
+    padding: 16,
+    borderRadius: 20,
+  },
+  headerContainer: {
+    overflow: "hidden",
+    position: "relative",
   },
   postHeader: {
     flexDirection: "row",
@@ -2112,11 +2189,13 @@ const styles = StyleSheet.create({
   voteContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(173, 181, 189, 0.1)",
+    backgroundColor: "rgba(173, 181, 189, 0.15)",
     borderRadius: 20,
-    paddingVertical: 4,
-    paddingHorizontal: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
     marginRight: 12,
+    borderWidth: 1,
+    borderColor: "rgba(173, 181, 189, 0.2)",
   },
   actionButton: {
     padding: 4,
